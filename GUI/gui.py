@@ -160,6 +160,11 @@ def render_hypnogram_step_by_step(hypno, screen, step_size=20, threshold = 35):
         plt.ylim(0.5, 5.5)  # Ustawienie zakresu Y dla czytelności
 
         # axis !!!
+        max_sample = len(hypno)
+        samples_per_hour = 120
+        hour_ticks = np.arange(0, max_sample + 1, samples_per_hour)  # Hour ticks
+        hour_labels = [f'{tick // samples_per_hour:.1f}h' for tick in hour_ticks]  # Convert ticks to hours
+        plt.xticks(ticks=hour_ticks, labels=hour_labels)
 
         plt.legend()
         plt.grid(axis='x', linestyle='--', alpha=0.5)
