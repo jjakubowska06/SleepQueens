@@ -3,10 +3,6 @@ This repository contains a prototype for a personalized alarm clock system, focu
 ![](https://github.com/jjakubowska06/SleepQueens/blob/main/hypno.gif)
 **Fig 1.** Simulation of an online generation of hypnogram, along with accessing sleep cycles. The signal ('sleep-telemetry/ST7112J0-PSG.edf') used for the simulation comes from the SleepEDF Database Expanded [1] from Physionet [2].
 
-## Authors
-The software was prepared by: Paula Banach, Julia Jakubowska, Hanna Moczek, and Kamila Trafna. All of the authors of this repository are members of the Neuroinformatics Scientific Club, University of Warsaw, Poland. 
-![](https://github.com/jjakubowska06/SleepQueens/blob/main/KNNeuro.png)
-
 ## Architecture of CAT app
 ![](https://github.com/jjakubowska06/SleepQueens/blob/main/CAT_architecture_background.png)
 
@@ -20,5 +16,7 @@ The core of the software is based on the AI-based automatic sleep staging tool Y
 
 
 ![](https://github.com/jjakubowska06/SleepQueens/blob/main/SleepQueen.png)
-
+## Authors
+The software was prepared by: Paula Banach, Julia Jakubowska, Hanna Moczek, and Kamila Trafna. All of the authors of this repository are members of the Neuroinformatics Scientific Club, University of Warsaw, Poland. 
+![](https://github.com/jjakubowska06/SleepQueens/blob/main/KNNeuro.png)
 
