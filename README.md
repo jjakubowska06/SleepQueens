@@ -20,6 +20,7 @@ The core of the software is based on the AI-based automatic sleep staging tool Y
 
 ![](https://github.com/jjakubowska06/SleepQueens/blob/main/SleepQueen.png)
 ## Authors
-The software was prepared by: Paula Banach, Julia Jakubowska, Hanna Moczek, and Kamila Trafna. All of the authors of this repository are members of the Neuroinformatics Scientific Club, University of Warsaw, Poland. 
+The software was prepared by: Paula Banach, Julia Jakubowska, Hanna Moczek, and Kamila Trafna. All of the authors of this repository are members of the Neuroinformatics Scientific Club, University of Warsaw, Poland.
+
 ![](https://github.com/jjakubowska06/SleepQueens/blob/main/FUW.png)
 
