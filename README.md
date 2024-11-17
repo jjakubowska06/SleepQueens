@@ -5,6 +5,7 @@ This repository contains a prototype for a personalized alarm clock system, focu
 
 ## Architecture of CAT app
 ![](https://github.com/jjakubowska06/SleepQueens/blob/main/CAT_architecture_background.png)
+**Fig 2.** The architecture of the CAT App. 
 
 ## Methodology
 The core of the software is based on the AI-based automatic sleep staging tool Yasa [3]. Based on this software, an online hypnogram generation would take place, along with accessing sleep cycles. 
