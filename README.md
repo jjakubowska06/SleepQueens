@@ -12,7 +12,9 @@ The core of the software is based on the AI-based automatic sleep staging tool Y
 
 ## Literature
 [1] B Kemp, AH Zwinderman, B Tuk, HAC Kamphuisen, JJL Oberyé. Analysis of a sleep-dependent neuronal feedback loop: the slow-wave microcontinuity of the EEG. IEEE-BME 47(9):1185-1194 (2000).
+
 [2] Goldberger, A., Amaral, L., Glass, L., Hausdorff, J., Ivanov, P. C., Mark, R., ... & Stanley, H. E. (2000). PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. Circulation. 101 (23), pp. e215–e220.
+
 [3] Jevri H., Agnes F. "An accessible and versatile deep learning-based sleep stage classifier", 2023. Frontiers in Neuroinformatics 17, DOI=10.3389/fninf.2023.1086634
 
 
