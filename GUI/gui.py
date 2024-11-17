@@ -106,7 +106,31 @@ def third_screen():
         pygame.display.flip()
 
 # Rysowanie hipnogramu
-def render_hypnogram_step_by_step(hypno, screen, step_size=20):
+def render_hypnogram_step_by_step(hypno, screen, step_size=20, threshold = 35):
+
+    # smoothing cycles
+    cycles_stamps_smooth = []
+
+    for i,state in enumerate(hypno):
+        if len(hypno) == 1:
+            continue
+
+        # jesli poprzedni rem, a aktualny nie rem, to koniec cyklu
+        if state != 'R' and hypno[i-1] == 'R':
+            cycles_stamps_smooth.append(i)
+
+        # smooth out hypno
+        elif state == 'R':
+        # check if previous state was R
+            if hypno[i-1] == 'R':
+                continue
+
+            # threshold 15 min?
+            elif 'R' in hypno[i-threshold:i-1]:
+                cycles_stamps_smooth.pop(-1)
+
+    t = np.arange(0, len(hypno)) / 120
+
     sleep_stage_map = {'W': 5, 'R': 4, 'N1': 3, 'N2': 2, 'N3': 1}
     hypno_num = [sleep_stage_map[state] for state in hypno]
 
@@ -120,9 +144,23 @@ def render_hypnogram_step_by_step(hypno, screen, step_size=20):
 
         # Rysowanie wykresu
         plt.figure(figsize=(10, 3))
+
+        # cycles
+        for j, stamp in enumerate(cycles_stamps_smooth):
+            if j == 5:
+                plt.vlines(stamp, 0, 6, color='#f5bebd', linewidth=3)
+                break
+            if stamp <= i+step_size:
+                if stamp == cycles_stamps_smooth[-1]:
+                    break
+                plt.vlines(stamp, 0, 6, color='#f5bebd', linewidth=3)
+
         plt.plot(rysuj_hypno, color='#5e6697', label="Hypnogram")
         plt.yticks(list(custom_labels.keys()), list(custom_labels.values()))
         plt.ylim(0.5, 5.5)  # Ustawienie zakresu Y dla czytelności
+
+        # axis !!!
+
         plt.legend()
         plt.grid(axis='x', linestyle='--', alpha=0.5)
 
