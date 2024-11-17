@@ -13,15 +13,17 @@ w, h = 1280, 720
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((w, h))
-pygame.display.set_caption("Sleepy")
+pygame.display.set_caption("CATApp")
 image = pygame.image.load("SleepQueen.png")
 
 # Czcionki
 font = pygame.font.Font(None, 100)
+font_m = pygame.font.Font(None, 80)
+font_2m = pygame.font.Font(None, 60)
 button_font = pygame.font.Font(None, 30)
 
 # Napisy i przyciski
-title_text = font.render("SleepQueens", True, '#5f6796')
+title_text = font.render("CATApp", True, '#5f6796')
 button_rect = pygame.Rect(w // 2 - 100, h // 2 + 200, 200, 60)
 button_text = button_font.render("START", True, '#5f6796')
 
@@ -44,8 +46,11 @@ def start_screen():
                     return  # Przejście do następnego ekranu
 
         screen.fill('#f4bcbc')
-        screen.blit(pygame.transform.scale(image, (w // 3 + 50, h // 3 + 50)), (700, h / 2 - 200))
-        screen.blit(title_text, (150, h / 2 - 100))
+        screen.blit(pygame.transform.scale(image, (w // 3 + 50, h // 3 + 50)), (700, h / 2 - 180))
+        screen.blit(title_text, (100, h / 2 - 150))
+        screen.blit(font_2m.render('Custom Alarm Technology', True, '#5f6796'), (100, h/2 - 50))
+        font_2m.set_italic(True)
+        screen.blit(font_2m.render('by SleepQueens', True, '#5f6796'), (100, h/2))
         draw_button(button_rect, button_text, '#5f6796', '#fbcc20', '#5f6796')
 
         pygame.display.flip()
@@ -73,16 +78,18 @@ def second_screen():
 
         screen.fill('#f4bcbc')
         font2 = pygame.font.Font(None, 80)
-        screen.blit(font2.render("Welcome to SleepQueens Alarm App", True, '#5f6796'), (50, 50))
-        screen.blit(font2.render("that helps you get up at the most", True, '#5f6796'), (50, 100))
-        screen.blit(font2.render("optimal time for your health!", True, '#5f6796'), (50, 150))
+        screen.blit(font2.render("Welcome to CATApp that helps you", True, '#5f6796'), (150, 100))
+        screen.blit(font2.render("get up at the most optimal time", True, '#5f6796'), (200, 180))
         font3 = pygame.font.Font(None, 60)
-        text_surface = font3.render('Enter the latest time you have to get up and press Enter', True, '#5f6796')
-        screen.blit(text_surface, (50, 300))
+        text_surface = font3.render('What is the latest time you have to get up?', True, '#5f6796')
+        screen.blit(text_surface, (50, 350))
 
-        pygame.draw.rect(screen, '#ffffff', pygame.Rect(50, 350, 800, 60))
+        pygame.draw.rect(screen, '#ffffff', pygame.Rect(100, 400, 750, 60))
         input_surface = font3.render(input_text, True, '#5f6796')
-        screen.blit(input_surface, (55, 355))
+        screen.blit(input_surface, (400, 410))
+        font4 = pygame.font.Font(None, 40)
+        font4.set_italic(True)
+        screen.blit(font4.render("Press Enter", True, '#5f6796'), (380, 470))
 
         pygame.display.flip()
 
@@ -91,7 +98,7 @@ def third_screen():
     while True:
         button_rect = pygame.Rect(w // 2 - 380, h // 2 - 150, 800, 240)
         button_font = pygame.font.Font(None, 70)
-        button_text = button_font.render("ROZPOCZNIJ POMIAR", True, '#5f6796')
+        button_text = button_font.render("START MEASUREMENT", True, '#5f6796')
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -184,6 +191,9 @@ def render_hypnogram_step_by_step(hypno, screen, step_size=20, threshold = 35):
         # Opóźnienie, aby symulować krokowy przebieg
         pygame.time.wait(10)  # 500ms przerwy między krokami
 
+    return cycles_stamps_smooth
+
+
 def alarm_animation():
     # Załaduj obraz budzika
     alarm_image = pygame.image.load("budzik.png")
@@ -227,6 +237,74 @@ def alarm_animation():
     # Zatrzymaj dźwięk po zakończeniu animacji
     alarm_sound.stop()
 
+
+def sleep_statistic(hypno, cycles_stamps_smooth, screen):
+    if len(hypno) <= 1:
+        return  # Jeśli hypno jest za krótkie, nie wykonuj dalszych operacji
+
+    hypno = hypno.tolist()  # Konwersja do listy, jeśli to potrzebne
+
+    total_sleep_time = sum(1 for state in hypno if state != 'W') / 120
+
+    # Oblicz czas trwania cykli w godzinach
+    if cycles_stamps_smooth and cycles_stamps_smooth[0] != 0:
+        cycles_stamps_smooth.insert(0, 0)
+
+    # Oblicz długość każdego cyklu w minutach i przelicz na godziny
+    cycle_durations_hours = [
+        (cycles_stamps_smooth[i] - cycles_stamps_smooth[i - 1]) / 120
+        for i in range(1, len(cycles_stamps_smooth))
+    ]
+
+    # Tworzenie wykresu
+    plt.figure(figsize=(6, 4))
+    if cycle_durations_hours:
+        plt.scatter(range(1, len(cycle_durations_hours) + 1), cycle_durations_hours, color='#5e6697', label='Cycle duration (h)')
+        plt.plot(range(1, len(cycle_durations_hours) + 1), cycle_durations_hours, color='#f4bcbc', alpha=0.5)
+    plt.xticks(range(1, len(cycle_durations_hours) + 1))
+    plt.xlabel('Cycle number')
+    plt.ylabel('Cycle duration (h)')
+    plt.grid(True)
+    plt.legend()
+
+    # Zapisanie wykresu do bufora
+    buf = io.BytesIO()
+    plt.savefig(buf, format="png")
+    plt.close()
+    buf.seek(0)
+
+    # Załaduj obraz do pygame
+    plot_image = pygame.image.load(buf)
+
+    # Wyświetl statystyki i wykres na ekranie pygame
+    stat_font = pygame.font.Font(None, 60)
+    text_lines = [
+        f"Amount of cycles: {len(cycles_stamps_smooth)-1}",
+        f"Sleep duration: {total_sleep_time:.2f} hours"
+    ]
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        screen.fill('#f4bcbc')
+
+        # Rysujemy tekst statystyk
+        y_offset = 50
+        for line in text_lines:
+            stat_text = stat_font.render(line, True, '#5f6796')
+            screen.blit(stat_text, (w // 2 - stat_text.get_width() // 2, y_offset))
+            y_offset += 80
+
+        # Rysujemy wykres
+        screen.blit(plot_image, plot_image.get_rect(center=(w // 2, h // 2 + 100)))
+
+        pygame.display.flip()
+
+    
+
 def game_loop():
     try:
         # Wczytanie sygnału EEG
@@ -234,12 +312,16 @@ def game_loop():
         sls = yasa.SleepStaging(sig, eeg_name="EEG Fpz-Cz", metadata=dict(age=21, male=False))
         hypno = sls.predict()
 
-        # Krokowe renderowanie hipnogramu
-        render_hypnogram_step_by_step(hypno, screen, step_size=20)
 
+        cycles_stamps_smooth = render_hypnogram_step_by_step(hypno, screen, step_size=20)
+
+        # Animacja alarmu
         alarm_animation()
 
-        # Po zakończeniu animacji, pozostaw ostatni wykres
+        # Wyświetlenie statystyk
+        sleep_statistic(hypno, cycles_stamps_smooth,screen)
+
+
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
